@@ -1,4 +1,4 @@
-***Brickbreaker Game in Java***
+# Brickbreaker Game in Java
 
 This is a classic Brickbreaker game developed in Java. It provides a fun experience for players to break bricks with a paddle and ball.
 
