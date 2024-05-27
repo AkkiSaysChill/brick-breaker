@@ -15,3 +15,9 @@ public class Main {
         obj.add(gameplay);
     }
 }
+/*
+* sound only works when the programme is compiled to jar file and the sound folder and the jar file are in same folder
+* idk how to fix it lol hehe
+* you can fix it if you know
+* Thanks !
+*/

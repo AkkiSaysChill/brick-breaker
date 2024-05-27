@@ -2,7 +2,10 @@ package brickbreaker;
 
 import org.w3c.dom.css.Rect;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +38,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
         timer = new Timer(delay, this);
         timer.start();
+
+        playSound("sound/mujic.wav");
     }
 
     public void paint(Graphics g){
@@ -93,13 +98,35 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         g.dispose();
     }
 
+    public static void playSound(String filePath) {
+        try {
+            // Open an audio input stream
+            File soundFile = new File(filePath);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+
+            // Get a sound clip resource
+            Clip clip = AudioSystem.getClip();
+
+            // Open the audio clip and load samples from the audio input stream
+            clip.open(audioIn);
+
+            // Play the audio clip
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
+
         timer.start();
 
         if(play){
             if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerx, 550,100,8))){
                 ballYdir = -ballYdir;
+                playSound("sound/hitHurt.wav");
             }
 
             A: for (int i = 0; i<map.map.length; i++){
@@ -119,6 +146,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                             totalBricks--;
                             score += 5;
 
+                            playSound("sound/explosion.wav");
+
+
                             if (ballposX + 19 <= brickRect.x || ballposY + 1 >= brickRect.x + brickRect.width) {
                                 ballXdir = -ballXdir;
 
@@ -136,12 +166,15 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             ballposY += ballYdir;
             if (ballposX < 0){
                 ballXdir = -ballXdir;
+                playSound("sound/hitHurt.wav");
             }
             if (ballposY < 0){
                 ballYdir = -ballYdir;
+                playSound("sound/hitHurt.wav");
             }
             if (ballposX > 670){
                 ballXdir = -ballXdir;
+                playSound("sound/hitHurt.wav");
             }
             // System.out.println(ballposY);
         }
@@ -193,6 +226,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     public void moveLeft()
     {
         play = true;
+
         playerx -= 25;
     }
 
