@@ -7,7 +7,7 @@ public class Main {
         JFrame obj = new JFrame();
         Gameplay gameplay = new Gameplay();
         obj.setBounds(10, 10, 700, 600);
-        obj.setTitle("Break A Leg");
+        obj.setTitle("Billo Bage Billeya da ki kerre gi");
         obj.setResizable(false);
         obj.setVisible(true);
         obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

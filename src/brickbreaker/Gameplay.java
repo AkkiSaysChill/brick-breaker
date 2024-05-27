@@ -1,5 +1,7 @@
 package brickbreaker;
 
+import org.w3c.dom.css.Rect;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,10 +23,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private int ballposX = 120;
     private int ballposY = 350;
-    private int ballXdir = -1;
-    private int ballYdir = -2;
+    private int ballXdir = -3;
+    private int ballYdir = -3;
+
+    private MapGen map;
 
     public Gameplay(){
+        map = new MapGen(3, 7);
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -36,6 +41,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         // background
         g.setColor(Color.BLACK);
         g.fillRect(1, 1,692,592);
+
+        // Map Gen
+        map.draw((Graphics2D) g);
 
         //borders
         g.setColor(Color.GRAY);
@@ -57,6 +65,54 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
+
+        if(play){
+            if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerx, 550,100,8))){
+                ballYdir = -ballYdir;
+            }
+
+            for (int i = 0; i<map.map.length; i++){
+                for (int j = 0; j < map.map[0].length; j++){
+                    if (map.map[i][j] > 0){
+                        int brickX = j * map.brickwidth + 80;
+                        int brickY = i * map.brickheight + 50;
+                        int brickwidth = map.brickwidth;
+                        int brickheight = map.brickheight;
+
+                        Rectangle rect = new Rectangle(brickX, brickY, brickwidth, brickheight);
+                        Rectangle ballrect = new Rectangle(ballposX, ballposY, 20,20);
+                        Rectangle brickRect = rect;
+
+                        if (ballrect.intersects(brickRect)){
+                            map.setBrickValue(0 , i, j);
+                            totalBricks--;
+                            score += 5;
+
+                            if (ballposX + 19 <= brickRect.x || ballposY + 1 >= brickRect.x + brickRect.width) {
+                                ballXdir = -ballXdir;
+
+                            }else {
+
+                                ballYdir = -ballYdir;
+                            }
+                        }
+                    }
+                }
+            }
+
+            ballposX += ballXdir;
+            ballposY += ballYdir;
+            if (ballposX < 0){
+                ballXdir = -ballXdir;
+            }
+            if (ballposY < 0){
+                ballYdir = -ballYdir;
+            }
+            if (ballposX > 670){
+                ballXdir = -ballXdir;
+            }
+            // System.out.println(ballposY);
+        }
         repaint();
     }
 
@@ -86,12 +142,12 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     public void moveLeft()
     {
         play = true;
-        playerx -= 20;
+        playerx -= 25;
     }
 
     public void moveRight() {
         play = true;
-        playerx += 20;
+        playerx += 25;
 
         // System.out.println(playerx);
     }
